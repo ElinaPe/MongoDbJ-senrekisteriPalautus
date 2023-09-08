@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MongoDbJäsenrekisteri.Models;
 
-namespace MongoDbJäsenrekisteri.Models
+namespace MongoDbJäsenrekisteri.Service
 {
     public class JasenService
     {
@@ -12,19 +13,19 @@ namespace MongoDbJäsenrekisteri.Models
             var mongoClient = new MongoClient(options.Value.ConnectionString);
             _jasenet = mongoClient.GetDatabase(options.Value.DatabaseName).GetCollection<Jasen>(options.Value.JasenCollectionName);
         }
-        public async Task<List<Jasen>> Get() =>
+        public async Task<List<Jasen>> GetAsync() =>
             await _jasenet.Find(_ => true).ToListAsync();
 
-        public async Task<Jasen> Get(string id) =>
+        public async Task<Jasen> GetAsync(string id) =>
             await _jasenet.Find(j => j.Id == id).FirstOrDefaultAsync();
 
-        public async Task Create(Jasen newJasen) =>
+        public async Task CreateAsync(Jasen newJasen) =>
             await _jasenet.InsertOneAsync(newJasen);
 
-        public async Task Update(string id, Jasen updateJasen) =>
+        public async Task UpdateAsync(string id, Jasen updateJasen) =>
             await _jasenet.ReplaceOneAsync(j => j.Id == id, updateJasen);
 
-        public async Task Remove(string id) =>
+        public async Task RemoveAsync(string id) =>
             await _jasenet.DeleteOneAsync(j => j.Id == id);
 
     }
