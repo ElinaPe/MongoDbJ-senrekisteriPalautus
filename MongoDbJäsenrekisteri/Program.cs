@@ -11,6 +11,7 @@ builder.Services.AddSingleton<JasenService>();
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -64,5 +65,18 @@ app.MapDelete("/api/jasenet/{id}", async (JasenService jasenService, string id) 
     await jasenService.Remove(jasen.Id);
     return Results.NoContent();
 });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
+app.UseCors("AllowAllOrigins");
 
 app.Run();
